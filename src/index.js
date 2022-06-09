@@ -8,6 +8,17 @@ function createCube(geometry, color, x) {
     return cube;
 }
 
+function resizeRendererToDisplaySize(renderer) {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      renderer.setSize(width, height, false);
+    }
+    return needResize;
+  }
+
 function main() {
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
@@ -46,6 +57,16 @@ function main() {
 
   function render(time) {
     time *= 0.001;  // convert time to seconds
+
+    //fix boxes being all stretchy we need to set the aspect of the camera to the aspect of the canvas's 
+    // display size. We can do that by looking at the canvas's clientWidth and clientHeight properties.
+    // We also need to resize the canvas' internal size to match the size we set in css
+    if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+
     elements.forEach((e) => {
         e.rotation.x = time;
         e.rotation.y = time;
