@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import "./index.css";
 
 function createCube(geometry, color, x) {
     const material = new THREE.MeshPhongMaterial({color});
